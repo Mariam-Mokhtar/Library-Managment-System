@@ -3,6 +3,8 @@ package com.system.Library.application.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.system.Library.application.entity.Patron;
 import com.system.Library.application.mapper.PatronMapper;
 import com.system.Library.application.model.request.PatronReqModel;
 import com.system.Library.application.model.response.PatronResModel;
+import com.system.Library.application.repository.BorrowingRecordsRepository;
 import com.system.Library.application.repository.PatronRepository;
 import com.system.Library.application.service.PatronService;
 import com.system.Library.utils.exception.enums.ApiErrorMessageEnum;
@@ -23,6 +26,9 @@ public class PatronServiceImpl implements PatronService {
 
 	@Autowired
 	PatronMapper patronMapper;
+
+	@Autowired
+	BorrowingRecordsRepository borrowingRecordsRepository;
 
 	@Override
 	public List<PatronResModel> getAllPatrons() {
@@ -65,11 +71,19 @@ public class PatronServiceImpl implements PatronService {
 	}
 
 	@Override
+	@Transactional
 	public void deletePatron(int id) {
 		Optional<Patron> patron = patronRepository.findById(id);
 		if (!patron.isPresent())
 			throw new BusinessLogicViolationException(ApiErrorMessageEnum.BCV_PATRON_ID_NOT_FOUND.name());
+		validatePatronNotBorrowingBook(id);
+		borrowingRecordsRepository.deleteAllByPatronId(id);
 		patronRepository.delete(patron.get());
 	}
 
+	private void validatePatronNotBorrowingBook(int id) {
+		if (borrowingRecordsRepository.existsByPatronIdAndReturnDateIsNull(id)) {
+			throw new BusinessLogicViolationException(ApiErrorMessageEnum.BCV_PATRON_IS_BORROWING_BOOK.name());
+		}
+	}
 }

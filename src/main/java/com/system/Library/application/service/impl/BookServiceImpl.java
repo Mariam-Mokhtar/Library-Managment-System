@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import com.system.Library.application.mapper.BookMapper;
 import com.system.Library.application.model.request.BookReqModel;
 import com.system.Library.application.model.response.BookResModel;
 import com.system.Library.application.repository.BookRepository;
+import com.system.Library.application.repository.BorrowingRecordsRepository;
 import com.system.Library.application.service.BookService;
 import com.system.Library.utils.exception.enums.ApiErrorMessageEnum;
 import com.system.Library.utils.exception.impl.BusinessLogicViolationException;
@@ -29,6 +32,9 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	BookMapper bookMapper;
+
+	@Autowired
+	BorrowingRecordsRepository borrowingRecordsRepository;
 
 	@Override
 	public List<BookResModel> getAllBooks() {
@@ -93,10 +99,15 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteBook(int id) {
 		Optional<Book> optionalBook = bookRepository.findById(id);
 		if (!optionalBook.isPresent())
 			throw new BusinessLogicViolationException(ApiErrorMessageEnum.BCV_BOOK_ID_NOT_FOUND.name());
+		Book book = optionalBook.get();
+		if (!book.getAvailable())
+			throw new BusinessLogicViolationException(ApiErrorMessageEnum.BCV_BOOK_IS_ALREADY_BORROWED.name());
+		borrowingRecordsRepository.deleteAllByBookId(id);
 		bookRepository.delete(optionalBook.get());
 	}
 

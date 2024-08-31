@@ -29,6 +29,8 @@ public class BookReqModel {
 	@Length(min = 13, max = 13)
 	private String isbn;
 
+	private boolean available = true;
+
 	public BookReqModel() {
 
 	}

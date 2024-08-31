@@ -6,4 +6,11 @@ import com.system.Library.application.entity.BorrowingRecords;
 
 public interface BorrowingRecordsRepository extends JpaRepository<BorrowingRecords, Integer> {
 	BorrowingRecords findByBookIdAndPatronIdAndReturnDateIsNull(int bookId, int patronId);
+
+	void deleteAllByBookId(int id);
+
+	void deleteAllByPatronId(int id);
+
+	boolean existsByPatronIdAndReturnDateIsNull(int id);
+
 }

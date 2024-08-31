@@ -12,5 +12,5 @@ public class BookResModel {
 	private String author;
 	private int publishYear;
 	private String isbn;
-
+	private boolean available;
 }

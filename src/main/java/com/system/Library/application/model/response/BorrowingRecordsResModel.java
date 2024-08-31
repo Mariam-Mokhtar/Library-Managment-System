@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 public class BorrowingRecordsResModel {
 	private Long id;
-	private Long bookId;
-	private Long patronId;
+	private PatronResModel patron;
+	private BookResModel book;
 	private LocalDate borrowingDate;
 	private LocalDate returnDate;
 

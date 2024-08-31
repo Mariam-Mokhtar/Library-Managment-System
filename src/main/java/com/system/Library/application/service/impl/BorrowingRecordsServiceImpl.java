@@ -43,17 +43,13 @@ public class BorrowingRecordsServiceImpl implements BorrowingRecordsService {
 	public BorrowingRecordsResModel borrowBook(int bookId, int patronId) {
 		BorrowingRecords borrowingRecord = new BorrowingRecords();
 		Book book = bookRepository.findById(bookId).orElse(null);
-		;
 		if (book == null)
 			throw new BusinessLogicViolationException(ApiErrorMessageEnum.BCV_BOOK_ID_NOT_FOUND.name());
 		Patron patron = patronRepository.findById(patronId).orElse(null);
 		if (patron == null)
 			throw new BusinessLogicViolationException(ApiErrorMessageEnum.BCV_PATRON_ID_NOT_FOUND.name());
-
 		if (book.getAvailable()) {
-			borrowingRecord.setBook(book);
-			borrowingRecord.setPatron(patron);
-			borrowingRecord.setBorrowingDate(LocalDate.now());
+			borrowingRecord = borrowingRecordsMapper.mapToBorrowingRecord(book, patron, LocalDate.now());
 			borrowingRecordsRepository.save(borrowingRecord);
 			book.setAvailable(false);
 			bookRepository.save(book);
