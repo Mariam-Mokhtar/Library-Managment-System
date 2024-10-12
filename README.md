@@ -13,21 +13,24 @@ This project is a **Library Management System** built using **Spring Boot** and 
 - **Security**:Basic authentication using JWT for API protection.
 - **Transaction Management**: Ensure data integrity during critical operations.
 - **Unit Testing**: Comprehensive tests to ensure API functionality.
+- **Auditing**: Track changes to entities, including the last modified date and user, to enhance accountability and transparency.
+- **Aspects**: Use AOP to separate cross-cutting concerns and improve code modularity.
+- **Caching**: Enhance performance by storing frequently accessed data to reduce database load.
 
 ## Technologies Used
 
 - **Spring Boot**: Backend framework for building the RESTful API.
 - **MySQL**: Relational database for persisting library data.
 - **JUnit & Mockito**: Testing frameworks for unit tests.
-- **Maven**: Dependency management and build automa
+- **Maven**: Dependency management and build automatic
 
-### Entities
+## Entities
 
 - **Book**: Includes attributes like ID, title, author, publication year, ISBN.
 - **Patron**: Contains details like ID, name, and contact information.
 - **Borrowing Record**: Tracks the association between books and patrons, including borrowing and return dates.
 
-### API Endpoints
+## API Endpoints
 
 - **Book Management**:
   - `GET /api/books`: Retrieve a list of all books.
