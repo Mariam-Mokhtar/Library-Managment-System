@@ -7,6 +7,9 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,12 +40,14 @@ public class BookServiceImpl implements BookService {
 	BorrowingRecordsRepository borrowingRecordsRepository;
 
 	@Override
+	@Cacheable(value = "getAllBooks", key = "#root.methodName")
 	public List<BookResModel> getAllBooks() {
 		List<Book> books = bookRepository.findAll();
 		return bookMapper.mapFromBookToBookResModel(books);
 	}
 
 	@Override
+	@Cacheable(value = "getAllFilteredBooks", key = "#root.methodName + #sortingField + #sortingOrder + #pageIndex + #pageSize")
 	public List<BookResModel> getAllFilteredBooks(BookFilter bookFilter, String sortingOrder, String sortingField,
 			int pageIndex, int pageSize) {
 		Pageable pageableReq = null;
@@ -59,6 +64,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	@Cacheable(value = "getBookById", key = "#id")
 	public BookResModel getBookById(int id) {
 		Optional<Book> book = bookRepository.findById(id);
 		if (!book.isPresent())
@@ -67,13 +73,18 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public void createBook(BookReqModel bookReqModel) {
+	@CacheEvict(value = "getAllBooks", allEntries = true)
+	@CachePut(value = "getBookById", key = "#result.id")
+	public BookResModel createBook(BookReqModel bookReqModel) {
 		validateUniqueness(bookReqModel, 0); // id is int in the book entity
 		Book book = bookMapper.mapFromBookReqModelToBook(bookReqModel);
 		bookRepository.save(book);
+		return bookMapper.mapFromBookToBookResModel(book);
 	}
 
 	@Override
+	@CacheEvict(value = "getAllBooks", allEntries = true)
+	@CachePut(value = "getBookById", key = "#result.id")
 	public BookResModel updateBook(BookReqModel bookReqModel, int id) {
 		Optional<Book> optionalBook = bookRepository.findById(id);
 		if (!optionalBook.isPresent())
@@ -100,6 +111,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional
+	@CacheEvict(value = { "getBookById", "getAllBooks" }, allEntries = true)
 	public void deleteBook(int id) {
 		Optional<Book> optionalBook = bookRepository.findById(id);
 		if (!optionalBook.isPresent())

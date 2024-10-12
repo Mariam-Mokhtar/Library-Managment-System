@@ -15,7 +15,7 @@ public interface BookService {
 
 	public BookResModel getBookById(int id);
 
-	public void createBook(BookReqModel bookReqModel);
+	public BookResModel createBook(BookReqModel bookReqModel);
 
 	public BookResModel updateBook(BookReqModel bookReqModel, int id);
 

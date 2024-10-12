@@ -67,9 +67,8 @@ public class BookController {
 
 	@Operation(summary = "Add a new book to the library")
 	@PostMapping
-	public ResponseEntity<Void> createBook(@Valid @RequestBody BookReqModel bookReqModel) {
-		bookService.createBook(bookReqModel);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<BookResModel> createBook(@Valid @RequestBody BookReqModel bookReqModel) {
+		return new ResponseEntity<>(bookService.createBook(bookReqModel), HttpStatus.OK);
 	}
 
 	@Operation(summary = "Update an existing book's information")
