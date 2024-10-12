@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.system.Library.auditing.entity.BaseEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +26,7 @@ import lombok.Setter;
 		@UniqueConstraint(columnNames = { "borrowingDate", "book_id", "patron_id" }) })
 @NoArgsConstructor
 @AllArgsConstructor
-public class BorrowingRecords implements Serializable {
+public class BorrowingRecords extends BaseEntity implements Serializable {
 
 	/**
 	 * 
@@ -35,10 +37,8 @@ public class BorrowingRecords implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-//	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDate borrowingDate;
 
-//	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDate returnDate;
 
 	@ManyToOne

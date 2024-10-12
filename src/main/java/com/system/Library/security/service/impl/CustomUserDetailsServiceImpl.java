@@ -1,8 +1,6 @@
 package com.system.Library.security.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,8 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 			throw new UsernameNotFoundException("User not found");
 		}
 		// Create and return UserDetails object
-		return new User(user.getUsername(), user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole()));
+//		return new User(user.getUsername(), user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole()));
+		return user;
 	}
 
 }

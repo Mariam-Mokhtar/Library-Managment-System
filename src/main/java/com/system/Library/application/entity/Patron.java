@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.system.Library.auditing.entity.BaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "Patron", uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
-public class Patron implements Serializable {
+public class Patron extends BaseEntity implements Serializable {
 
 	/**
 	 * 

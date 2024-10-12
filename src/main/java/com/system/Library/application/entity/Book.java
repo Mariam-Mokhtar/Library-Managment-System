@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.system.Library.auditing.entity.BaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +21,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "Book", uniqueConstraints = { @UniqueConstraint(columnNames = { "title", "author" }) })
-public class Book implements Serializable {
+public class Book extends BaseEntity implements Serializable {
 
 	/**
 	 * 
