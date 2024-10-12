@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class LogTimeAspect {
 	public static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
-	@Around("execution(* com.system.Library.application.repository.*.*(..))")
+	@Around(value = "execution(* com.system.library..repository..(..))")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 		long startTime = System.currentTimeMillis(); // Start time
 		log.info("Entering method: " + joinPoint.getSignature().getName());
